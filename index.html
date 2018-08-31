@@ -10,28 +10,31 @@
 		user-select:none;
 	}
 	#qrcode{
-		width:200; height:200px; margin:auto;margin-top:15px;border: 4px solid red;padding: 10px;
+		width:200; height:200px; margin:auto;margin-top:15px;border: 4px solid red;padding: 10px; position: static;
 	}
-	@media screen and (min-width:600px){
+	@media screen and (min-width:1000px){
 		#inputBoxContainer,#qrcodeContainer{
 				display: inline-block;
 				width: 49%;
 				vertical-align: top;
 		}
 		body{
-			height: 100%
+			height: 100%;
 		}
 
 		
 
 		#inputBoxContainer{
+			box-sizing: border-box;
 			padding: 10px;
+			/*background: red;*/
 		}
 
 
 		#qrcodeContainer{
 			position: relative;
-			height: 100%
+			height: 100%;
+			/*background: yellow;*/
 		}
 
 		#qrcode{
@@ -43,6 +46,29 @@
 		margin: auto;
 		}
 
+		
+
+	}
+	#inputBoxContainer{
+		padding:10px; 
+			box-shadow: 0 0 8px 0px #00000052;
+			border-radius: 3px;
+			margin: 10px;
+			overflow: hidden;
+	}
+	#historyList {
+		padding-left: 0;
+		max-height: 200px;
+		overflow: auto;
+	}
+	#historyList li{
+		line-height: 20px;
+		margin:10px 0;
+		padding:0 20px;
+		list-style: none;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 </style>
 </head>
@@ -50,9 +76,11 @@
 
 <div id="inputBoxContainer">
 	<label for="text">输入要生成二维码的文字,回车生成二维码</label>
-	<input id="text" type="text" value="http://www.runoob.com" style="width:80%" placeholder="请输入文本" /><br/>
+	<input id="text" type="text" value="http://www.runoob.com" style="width:80%" placeholder="请输入文本" />
+	<button>生成</button>
+	<br/>
 	<ul id="historyList">	
-			<li>第一条</li>
+			
 	</ul>
 </div>
 <div id="qrcodeContainer">
@@ -62,11 +90,14 @@
 <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
 <script type="text/javascript" src="//static.runoob.com/assets/qrcode/qrcode.min.js"></script>
 <script type="text/javascript">
+	var historyArray=(window.localStorage.getItem('history')||'').split(',').filter(function(item){return item !==''})
+	historyArray.length>=10&& historyArray.shift()
 var qrcode = new QRCode(document.getElementById("qrcode"), {
 	width : 200,
 	height : 200
 });
 
+$('#historyList').click(getHistoryFromList)
 function makeCode () {		
 	var elText = document.getElementById("text");
 	
@@ -81,14 +112,31 @@ function makeCode () {
 
 makeCode();
 
+function saveToStorage(){
+historyArray.push($("#text")[0].value);
+historyArray.length>=10&& historyArray.shift()
+window.localStorage.setItem('history',historyArray.join(','))
+$('#historyList').html(historyArray.map(function(item){return "<li>"+item+"</li>"}).reverse().join(''))
+}
+
+function getHistoryFromList(event){
+	// console.log(event.target.nodeName)
+	if(event.target.nodeName.toUpperCase()==='LI'){
+		console.log(event.target.innerHTML);
+		$("#text")[0].value=event.target.innerHTML;
+		makeCode();
+	}
+}
 
 $("#text").
 	on("blur", function () {
 		makeCode();
+		saveToStorage();
 	}).
 	on("keydown", function (e) {
 		if (e.keyCode == 13) {
 			makeCode();
+			saveToStorage();
 		}
 	});
 </script>
