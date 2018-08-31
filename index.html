@@ -111,7 +111,7 @@
 
 <div id="inputBoxContainer">
 	<label for="text">输入要生成二维码的文字,回车生成二维码</label>
-	<div class="input-box">	<input id="text" type="text" value="http://www.runoob.com" style="width:80%" placeholder="请输入文本" />
+	<div class="input-box">	<input id="text" type="text" value="" style="width:80%" placeholder="请输入文本" />
 	<button>生成</button></div>
 	<ul id="historyList">	
 			
@@ -137,7 +137,6 @@ function makeCode () {
 	var elText = document.getElementById("text");
 	
 	if (!elText.value) {
-		alert("Input a text");
 		elText.focus();
 		return;
 	}
