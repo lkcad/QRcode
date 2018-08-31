@@ -1,0 +1,96 @@
+<!DOCTYPE>
+<html>
+<head>
+<title>Javascript二维码生成库</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+<style type="text/css">
+	body{
+		margin: 0;
+		user-select:none;
+	}
+	#qrcode{
+		width:200; height:200px; margin:auto;margin-top:15px;border: 4px solid red;padding: 10px;
+	}
+	@media screen and (min-width:600px){
+		#inputBoxContainer,#qrcodeContainer{
+				display: inline-block;
+				width: 49%;
+				vertical-align: top;
+		}
+		body{
+			height: 100%
+		}
+
+		
+
+		#inputBoxContainer{
+			padding: 10px;
+		}
+
+
+		#qrcodeContainer{
+			position: relative;
+			height: 100%
+		}
+
+		#qrcode{
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom:0;		
+		margin: auto;
+		}
+
+	}
+</style>
+</head>
+<body>
+
+<div id="inputBoxContainer">
+	<label for="text">输入要生成二维码的文字,回车生成二维码</label>
+	<input id="text" type="text" value="http://www.runoob.com" style="width:80%" placeholder="请输入文本" /><br/>
+	<ul id="historyList">	
+			<li>第一条</li>
+	</ul>
+</div>
+<div id="qrcodeContainer">
+	<div id="qrcode"></div>	
+</div>
+
+<script type="text/javascript" src="http://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="http://static.runoob.com/assets/qrcode/qrcode.min.js"></script>
+<script type="text/javascript">
+var qrcode = new QRCode(document.getElementById("qrcode"), {
+	width : 200,
+	height : 200
+});
+
+function makeCode () {		
+	var elText = document.getElementById("text");
+	
+	if (!elText.value) {
+		alert("Input a text");
+		elText.focus();
+		return;
+	}
+	
+	qrcode.makeCode(elText.value);
+}
+
+makeCode();
+
+
+$("#text").
+	on("blur", function () {
+		makeCode();
+	}).
+	on("keydown", function (e) {
+		if (e.keyCode == 13) {
+			makeCode();
+		}
+	});
+</script>
+</body>
+</html>
