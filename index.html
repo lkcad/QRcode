@@ -26,7 +26,8 @@
 
 		#inputBoxContainer{
 			box-sizing: border-box;
-			padding: 10px;
+			padding: 20px;
+			width: 600px;
 			/*background: red;*/
 		}
 
@@ -50,7 +51,7 @@
 
 	}
 	#inputBoxContainer{
-		padding:10px; 
+		padding:20px; 
 			box-shadow: 0 0 8px 0px #00000052;
 			border-radius: 3px;
 			margin: 10px;
@@ -58,11 +59,11 @@
 	}
 	#historyList {
 		padding-left: 0;
-		max-height: 200px;
+		max-height: calc(100vh - 160px);
 		overflow: auto;
 	}
 	#historyList li{
-		line-height: 20px;
+		line-height: 30px;
 		margin:10px 0;
 		padding:0 20px;
 		list-style: none;
@@ -70,15 +71,48 @@
 		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
+
+	li:hover{
+		background: #00000015;
+		cursor: pointer;
+	}
+
+	#inputBoxContainer .input-box{
+		font-size: 20px;
+		font-size: 0;
+	}
+
+	#text{
+		outline: none;
+		line-height: 22px;
+		font-size: 20px;		
+		padding:10px;
+		vertical-align: middle;
+		margin-right: -2px;
+	}
+	#text:focus{
+		outline:  1px solid #2d78f4;
+	}
+	.input-box button{
+		width: 108px;
+	    height: 46px;
+	    vertical-align: middle;
+	    color: #fff;
+	    font-size: 15px;
+	    letter-spacing: 1px;
+	    background: #3385ff;
+	    border: 1px solid #2d78f4;
+	    outline: none;
+	    padding:0; 
+	}
 </style>
 </head>
 <body>
 
 <div id="inputBoxContainer">
 	<label for="text">输入要生成二维码的文字,回车生成二维码</label>
-	<input id="text" type="text" value="http://www.runoob.com" style="width:80%" placeholder="请输入文本" />
-	<button>生成</button>
-	<br/>
+	<div class="input-box">	<input id="text" type="text" value="http://www.runoob.com" style="width:80%" placeholder="请输入文本" />
+	<button>生成</button></div>
 	<ul id="historyList">	
 			
 	</ul>
@@ -90,8 +124,9 @@
 <script type="text/javascript" src="//cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
 <script type="text/javascript" src="//static.runoob.com/assets/qrcode/qrcode.min.js"></script>
 <script type="text/javascript">
+	var MAX_LENGTH=100;
 	var historyArray=(window.localStorage.getItem('history')||'').split(',').filter(function(item){return item !==''})
-	historyArray.length>=10&& historyArray.shift()
+	historyArray.length>=MAX_LENGTH&& historyArray.shift()
 var qrcode = new QRCode(document.getElementById("qrcode"), {
 	width : 200,
 	height : 200
@@ -114,7 +149,7 @@ makeCode();
 
 function saveToStorage(){
 historyArray.push($("#text")[0].value);
-historyArray.length>=10&& historyArray.shift()
+historyArray.length>=MAX_LENGTH&& historyArray.shift()
 window.localStorage.setItem('history',historyArray.join(','))
 $('#historyList').html(historyArray.map(function(item){return "<li>"+item+"</li>"}).reverse().join(''))
 }
